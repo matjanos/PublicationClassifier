@@ -57,29 +57,55 @@
         /// Reads the next record.
         /// </summary>
         /// <returns>The record or null if there are no more records.</returns>
-        public ArffRecord ReadNextRecord()
+        public IArffRecord ReadNextRecord()
         {
             if (!csvReader.ReadNextRecord()) return null;
-
-            ArffRecord record = new ArffRecord();
-            record.Values = new ArffValue[this.attributeCount];
-
+            IArffRecord record;
+            IArffValue arffVal;
+            if (csvReader[0].StartsWith("{"))
+            {
+                record = new ArffRecordSparse(this.attributeCount);
+            }
+            else
+            {
+                record = new ArffRecord(this.attributeCount);
+            }
             for (int i = 0; i < this.attributeCount; i++)
             {
-                var arffVal = record.Values[i] = new ArffValue();
-                var val = csvReader[i].Unescape();
-                if (val == "?")
+                string attrValueStr = csvReader[i];
+                if (record is ArffRecordSparse)
                 {
-                    arffVal.NominalValueIndex = -1;
+                    attrValueStr = attrValueStr.TrimStart(new char[] { '{' }).TrimEnd(new char[] { '}' });
                 }
-                else
+                switch (Attributes[i].TypeKeyWord)
                 {
-                    arffVal.NominalValueIndex = this.Attributes[i].NominalValues.IndexOf(val);
+                    case "numeric":
+                        arffVal = new ArffValueNumeric(attrValueStr);
+                        break;
+                    case "":
+                        var val = attrValueStr.Unescape();
+                        if (val.Equals("?"))
+                        {
+                            arffVal = new ArffValueNominal(-1,i);
+                        }
+                        else
+                        {
+                            arffVal = new ArffValueNominal(this.Attributes[i].NominalValues.IndexOf(val),i);
 
-                    if (arffVal.NominalValueIndex == -1)
-                    {
-                        throw new ArffReaderException("Unknown nominal value \"" + val + "\" for attribute \"" + this.Attributes[i].Name + "\".");
-                    }
+                            if (((ArffValueNominal)arffVal).Value == -1)
+                            {
+                                throw new ArffReaderException("Unknown nominal value \"" + val + "\" for attribute \"" + this.Attributes[i].Name + "\".");
+                            }
+                        }
+                        break;
+                    default:
+                        throw new Exception("Unknown ARFF attribute type");
+                }
+                record.addValue(arffVal);
+                if (record is ArffRecordSparse && csvReader[i].EndsWith("}"))
+                {//koniec atrybutów wariantu
+                    //TODO: czy jest waga
+                    break;
                 }
             }
 
@@ -108,19 +134,42 @@
 
                 line = line.Substring(AttributeDeclaration.Length + 1);
                 var split = line.Split('{', '}');
-                var name = split[0].Trim().Unescape();
-                var valueList = split[1];
-                var csv = new CsvReader(new StringReader(valueList), false, trimmingOptions: ValueTrimmingOptions.All);
-                int fieldCount = csv.FieldCount;
-                var values = new string[fieldCount];
-                csv.ReadNextRecord();
-
-                for (int i = 0; i < fieldCount; i++)
+                if (split.Length == 1)
                 {
-                    values[i] = csv[i].Unescape();
-                }
+                    split[0] = System.Text.RegularExpressions.Regex.Replace(split[0], @"\s+|\t+", " ");//change many spaces to one
+                    var pair = split[0].Split(' ');
+                    switch (pair[1].ToLower())
+                    {
+                        case "numeric":
+                            attributes.Add(new ArffAttributeNumeric(attributeIndex, pair[0]));
+                            break;
+                        case "string"://string
+                            attributes.Add(new ArffAttributeString(attributeIndex, pair[0]));
+                            break;
+                        case "date"://date
+                            attributes.Add(new ArffAttributeDate(attributeIndex, pair[0]));
+                            break;
+                        default:
+                            throw new FormatException("The attribute type is unknown");
 
-                attributes.Add(new ArffAttribute(attributeIndex, name, values));
+                    }
+                }
+                else if (split.Length == 3)
+                {
+                    var name = split[0].Trim().Unescape();
+                    var valueList = split[1];
+                    var csv = new CsvReader(new StringReader(valueList), false, trimmingOptions: ValueTrimmingOptions.All);
+                    int fieldCount = csv.FieldCount;
+                    var values = new string[fieldCount];
+
+                    csv.ReadNextRecord();
+
+                    for (int i = 0; i < fieldCount; i++)
+                    {
+                        values[i] = csv[i].Unescape();
+                    }
+                    attributes.Add(new ArffAttributeNominal(attributeIndex, name, values));
+                }
                 attributeIndex++;
             }
 

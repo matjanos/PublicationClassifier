@@ -1,16 +1,18 @@
-﻿namespace ArffSharp
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace ArffSharp
 {
-    /// <summary>
-    /// Represents a single data row in an ARFF file.
-    /// </summary>
-    public class ArffRecord : IArffRecord
+    class ArffRecordSparse : IArffRecord
     {
-        public ArffRecord(int valuesCount)
+        public ArffRecordSparse(int valuesCount)
         {
             this.Values = new IArffValue[valuesCount];
         }
-
         public IArffValue[] Values { get; private set; }
+
         private int iterator = 0;
 
         //public int Weight { private get; private set; }//TODO: http://weka.wikispaces.com/ARFF+(stable+version)#Instance weights in ARFF files
@@ -21,8 +23,7 @@
             iterator++;
         }
 
-
-        IArffValue[] IArffRecord.getValues()
+        public IArffValue[] getValues()
         {
             return this.Values;
         }

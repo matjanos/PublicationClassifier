@@ -42,11 +42,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArffAttribute.cs" />
+    <Compile Include="ArffAtributes\ArffAttribute.cs" />
+    <Compile Include="ArffAtributes\ArffAttributeNominal.cs" />
+    <Compile Include="ArffAtributes\ArffAttributeNumeric.cs" />
     <Compile Include="ArffReader.cs" />
     <Compile Include="ArffReaderException.cs" />
     <Compile Include="ArffRecord.cs" />
-    <Compile Include="ArffValue.cs" />
+    <Compile Include="ArffRecordSparse.cs" />
+    <Compile Include="ArffValueNumeric.cs" />
+    <Compile Include="IArffRecord.cs" />
+    <Compile Include="IArffValue.cs" />
+    <Compile Include="ArffAtributes\ArffAttributeString.cs" />
+    <Compile Include="ArffAtributes\ArffAttributeDate.cs" />
+    <Compile Include="ArffValueNominal.cs" />
     <Compile Include="NominalArffToBin.cs" />
     <Compile Include="Csv\CachedCsvReader.cs" />
     <Compile Include="Csv\CachedCsvReader.CsvBindingList.cs" />

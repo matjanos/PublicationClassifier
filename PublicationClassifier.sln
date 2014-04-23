@@ -1,11 +1,22 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IWM.PubClassifier.PresentationLayer", "PublicationClassifier\IWM.PubClassifier.PresentationLayer.csproj", "{26F9F442-AFC2-4A23-A534-57CCC820C220}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IWM.PubClassifier.PresentationLayer", "IWM.PubClassifier.PresentationLayer\IWM.PubClassifier.PresentationLayer.csproj", "{26F9F442-AFC2-4A23-A534-57CCC820C220}"
+	ProjectSection(ProjectDependencies) = postProject
+		{50E056B6-EB4F-4885-BF07-46EA2B167234} = {50E056B6-EB4F-4885-BF07-46EA2B167234}
+		{98B3DDB6-8E71-446D-ADA2-E583F14B53D5} = {98B3DDB6-8E71-446D-ADA2-E583F14B53D5}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IWM.PubClassifier.DataAdapter", "IWM.PubClassifier.DataAdapter\IWM.PubClassifier.DataAdapter.csproj", "{50E056B6-EB4F-4885-BF07-46EA2B167234}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IWM.PubClassifier.Core", "IWM.PubClassifier.Core\IWM.PubClassifier.Core.csproj", "{98B3DDB6-8E71-446D-ADA2-E583F14B53D5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{50E056B6-EB4F-4885-BF07-46EA2B167234} = {50E056B6-EB4F-4885-BF07-46EA2B167234}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArffSharp", "external\arffsharp\ArffSharp.csproj", "{7F570BA3-65F5-45E6-A0BF-8A7BC3DE9989}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{3C8EF7FA-7BA4-498D-9AC7-EAB413D520A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,8 +36,15 @@ Global
 		{98B3DDB6-8E71-446D-ADA2-E583F14B53D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98B3DDB6-8E71-446D-ADA2-E583F14B53D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98B3DDB6-8E71-446D-ADA2-E583F14B53D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F570BA3-65F5-45E6-A0BF-8A7BC3DE9989}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F570BA3-65F5-45E6-A0BF-8A7BC3DE9989}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F570BA3-65F5-45E6-A0BF-8A7BC3DE9989}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F570BA3-65F5-45E6-A0BF-8A7BC3DE9989}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7F570BA3-65F5-45E6-A0BF-8A7BC3DE9989} = {3C8EF7FA-7BA4-498D-9AC7-EAB413D520A0}
 	EndGlobalSection
 EndGlobal

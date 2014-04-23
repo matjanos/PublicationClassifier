@@ -33,13 +33,13 @@
                     }
 
                     writer.Write(reader.Attributes.Count);
-                    ArffRecord record;
+                    IArffRecord record;
                     while ((record = reader.ReadNextRecord()) != null)
                     {
-                        var values = record.Values;
+                        IArffValue[] values = record.getValues();
                         for (int i = 0; i < values.Length; i++)
                         {
-                            writer.Write((byte)values[i].NominalValueIndex);
+                            writer.Write((byte)values[i].ValueObj);
                         }
                         ++lineCount;
                         if (lineCount % 1000 == 0 && lineCount > 0) Console.Write(lineCount + " ");
