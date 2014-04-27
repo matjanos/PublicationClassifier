@@ -17,7 +17,7 @@ namespace ArffSharp
         }
 
 
-        public new void AddValue(string value)
+        public override void AddValue(string value)
         {
             var pair = value.Split(new []{' '}, 2);
             Iterator=Convert.ToInt32(pair[0]);

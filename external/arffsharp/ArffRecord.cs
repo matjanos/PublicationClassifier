@@ -25,7 +25,7 @@ namespace ArffSharp
 
         //public int Weight { private get; private set; }//TODO: http://weka.wikispaces.com/ARFF+(stable+version)#Instance weights in ARFF files
         
-        public void AddValue(string value)
+        public virtual void AddValue(string value)
         {
             IArffValue arffVal;
              switch (_attributesCollection[Iterator].TypeKeyWord)
