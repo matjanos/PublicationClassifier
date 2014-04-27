@@ -1,2 +1,6 @@
 [paths]
 default = https://matjanos@bitbucket.org/matjanos/arffsharp
+
+
+[ui]
+username = matjanos

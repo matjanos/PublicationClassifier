@@ -1,4 +1,6 @@
-﻿namespace ArffSharp
+﻿using ArffSharp.ArffAttributes;
+
+namespace ArffSharp
 {
     using System;
     using System.Collections.Generic;
@@ -59,55 +61,32 @@
         /// <returns>The record or null if there are no more records.</returns>
         public IArffRecord ReadNextRecord()
         {
-            if (!csvReader.ReadNextRecord()) return null;
+            try
+            {
+                if (!csvReader.ReadNextRecord()) return null;
+            }
+            catch
+            {
+                throw new FormatException(String.Format("The file has incorrect ARFF format"));
+            }
             IArffRecord record;
-            IArffValue arffVal;
             if (csvReader[0].StartsWith("{"))
             {
-                record = new ArffRecordSparse(this.attributeCount);
+                record = new ArffRecordSparse(Attributes);
             }
             else
             {
-                record = new ArffRecord(this.attributeCount);
+                record = new ArffRecord(Attributes);
             }
             for (int i = 0; i < csvReader.FieldCount; i++)
             {
-                string attrValueStr = csvReader[i];
+                string value= csvReader[i];
                 if (record is ArffRecordSparse)
                 {
-                    attrValueStr = attrValueStr.TrimStart(new char[] { '{' }).TrimEnd(new char[] { '}' });
+                    value = value.TrimStart(new char[] { '{' }).TrimEnd(new char[] { '}' });
                 }
-                switch (Attributes[i].TypeKeyWord)
-                {
-                    case "numeric":
-                        arffVal = new ArffValueNumeric(attrValueStr);
-                        break;
-                    case "date":
-                        arffVal = new ArffValueDate(attrValueStr);
-                        break;
-                    case "string":
-                        arffVal = new ArffValueString(attrValueStr);
-                        break;
-                    case "":
-                        var val = attrValueStr.Unescape();
-                        if (val.Equals("?"))
-                        {
-                            arffVal = new ArffValueNominal(-1,i);
-                        }
-                        else
-                        {
-                            arffVal = new ArffValueNominal(this.Attributes[i].NominalValues.IndexOf(val),i);
-
-                            if (((ArffValueNominal)arffVal).Value == -1)
-                            {
-                                throw new ArffReaderException("Unknown nominal value \"" + val + "\" for attribute \"" + this.Attributes[i].Name + "\".");
-                            }
-                        }
-                        break;
-                    default:
-                        throw new Exception("Unknown ARFF attribute type");
-                }
-                record.addValue(arffVal);
+               
+                record.AddValue(value);
                 if (record is ArffRecordSparse && csvReader[i][csvReader[i].Length-1]=='}')
                 {//koniec atrybutów wariantu
                     //TODO: czy jest waga
@@ -143,17 +122,25 @@
                 if (split.Length == 1)
                 {
                     split[0] = System.Text.RegularExpressions.Regex.Replace(split[0], @"\s+|\t+", " ");//change many spaces to one
-                    var pair = split[0].Split(' ');
-                    switch (pair[1].ToLower())
+                    var attrDefinition = split[0].Split(new []{' '},3);
+                    switch (attrDefinition[1].ToLower())
                     {
                         case "numeric":
-                            attributes.Add(new ArffAttributeNumeric(attributeIndex, pair[0]));
+                            attributes.Add(new ArffAttributeNumeric(attributeIndex, attrDefinition[0]));
                             break;
                         case "string"://string
-                            attributes.Add(new ArffAttributeString(attributeIndex, pair[0]));
+                            attributes.Add(new ArffAttributeString(attributeIndex, attrDefinition[0]));
                             break;
                         case "date"://date
-                            attributes.Add(new ArffAttributeDate(attributeIndex, pair[0]));
+                            switch (attrDefinition.Length)
+                            {
+                                case 2:
+                                    attributes.Add(new ArffAttributeDate(attributeIndex, attrDefinition[0]));
+                                    break;
+                                case 3:
+                                    attributes.Add(new ArffAttributeDate(attributeIndex, attrDefinition[0],attrDefinition[2]));
+                                    break;
+                            }                                   
                             break;
                         default:
                             throw new FormatException("The attribute type is unknown");

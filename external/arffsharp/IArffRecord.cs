@@ -7,7 +7,7 @@ namespace ArffSharp
 {
     public interface IArffRecord
     {
-        IArffValue[] getValues();
-        void addValue(IArffValue value);
+        IArffValue[] GetValues();
+        void AddValue(string value);
     }
 }

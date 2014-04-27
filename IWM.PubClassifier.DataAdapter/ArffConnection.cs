@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using ArffSharp;
+using ArffSharp.ArffAttributes;
 
 namespace IWM.PubClassifier.DataAdapter
 {
@@ -55,7 +56,7 @@ namespace IWM.PubClassifier.DataAdapter
             while ((record = _reader.ReadNextRecord()) != null)
             {
                 var recordDictionary = new Dictionary<string, float>();
-                var values = record.getValues();
+                var values = record.GetValues();
                 foreach (var arffValue in values)
                 {
                     if (arffValue == null) continue;
@@ -64,6 +65,19 @@ namespace IWM.PubClassifier.DataAdapter
                     if (arffValue is ArffValueNumeric)
                     {
                         recordDictionary.Add(attr.Name, (float)arffValue.ValueObj);
+                    }
+                    else if (arffValue is ArffValueDate)
+                    {
+                        Console.WriteLine(((ArffValueDate)arffValue).GetDateValue());
+                    }
+                    else if (arffValue is ArffValueString)
+                    {
+                        Console.WriteLine(((ArffValueString)arffValue).GetStringValue());
+
+                    }
+                    else if (arffValue is ArffValueNominal)
+                    {
+                        Console.WriteLine(String.Format("{0} : {1}",_reader.Attributes[arffValue.AttributeNo].Name,((ArffAttributeNominal)_reader.Attributes[arffValue.AttributeNo]).NominalValues[((ArffValueNominal)arffValue).GetNominalValue()]));
                     }
                 }
                 ObjectsAttributes.Add(recordDictionary);

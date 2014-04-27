@@ -1,8 +1,7 @@
-﻿namespace ArffSharp
-{
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 
+namespace ArffSharp.ArffAttributes
+{
     /// <summary>
     /// A single ARFF attribute.
     /// </summary>
@@ -44,10 +43,5 @@
             return this.Index + ". " + this.Name;
         }
 
-
-        /// <summary>
-        /// Gets the nominal values.
-        /// </summary>
-        public ReadOnlyCollection<string> NominalValues { get; private set; }
     }
 }

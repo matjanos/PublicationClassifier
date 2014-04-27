@@ -38,5 +38,26 @@ namespace ArffSharp
         {
             get { return Value; }
         }
+
+
+        public float GetNumericValue()
+        {
+            throw new ImproperValueTypeException("This value is of another type: "+Value.GetType().ToString());
+        }
+
+        public DateTime GetDateValue()
+        {
+            return Value;
+        }
+
+        public string GetStringValue()
+        {
+            throw new ImproperValueTypeException("This value is of another type: " + Value.GetType().ToString());
+        }
+
+        public int GetNominalValue()
+        {
+            throw new ImproperValueTypeException("This value is of another type: " + Value.GetType().ToString());
+        }
     }
 }

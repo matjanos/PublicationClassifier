@@ -25,7 +25,7 @@
             {
                 using (var writer = new BinaryWriter(File.Open(outputFile, FileMode.Create)))
                 {
-                    var maxAttributeValueCount = reader.Attributes.Max(a => a.NominalValues.Count);
+                    var maxAttributeValueCount = reader.Attributes.Where(attribute => attribute is ArffAttributes.ArffAttributeNominal).Max(a => ((ArffAttributes.ArffAttributeNominal)a).NominalValues.Count);
                     Console.WriteLine("Max attribute value count: " + maxAttributeValueCount);
                     if (maxAttributeValueCount > byte.MaxValue)
                     {
@@ -36,7 +36,7 @@
                     IArffRecord record;
                     while ((record = reader.ReadNextRecord()) != null)
                     {
-                        IArffValue[] values = record.getValues();
+                        IArffValue[] values = record.GetValues();
                         for (int i = 0; i < values.Length; i++)
                         {
                             writer.Write((byte)values[i].ValueObj);

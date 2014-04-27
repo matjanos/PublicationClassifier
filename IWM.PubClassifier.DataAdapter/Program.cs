@@ -10,7 +10,7 @@ namespace IWM.PubClassifier.DataAdapter
     {
         static void Main(string[] args)
         {
-            ArffConnection ac = new ArffConnection("D:/a.arff");
+            var ac = new ArffConnection(@"C:\Users\Kuba\Desktop\data.arff");
         }
     }
 }

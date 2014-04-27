@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace ArffSharp
+namespace ArffSharp.ArffAttributes
 {
     /// <summary>
     /// A single ARFF attribute with specified nominal values that attribute may take.
     /// </summary>
-    class ArffAttributeNominal : ArffAttribute
+    public class ArffAttributeNominal : ArffAttribute
     {
         
         /// <summary>
@@ -17,8 +17,8 @@ namespace ArffSharp
         /// <param name="nominalValues">The nominal values.</param>
         public ArffAttributeNominal(int index, string name, IList<string> nominalValues) : base(index, name)
         {
-            this.NominalValues = new ReadOnlyCollection<string>(nominalValues);
-            this.TypeKeyWord = "";
+            NominalValues = new ReadOnlyCollection<string>(nominalValues);
+            TypeKeyWord = "";
         }
 
 

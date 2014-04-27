@@ -1,24 +1,27 @@
 ﻿
+using System;
+using System.Collections.ObjectModel;
+using ArffSharp.ArffAttributes;
+
 namespace ArffSharp
 {
-    class ArffRecordSparse : IArffRecord
+    class ArffRecordSparse : ArffRecord
     {
-        public ArffRecordSparse(int valuesCount)
+        public ArffRecordSparse(ReadOnlyCollection<ArffAttribute> attributes):base(attributes)
         {
-            this.Values = new IArffValue[valuesCount];
         }
-        public IArffValue[] Values { get; private set; }
-
-        //public int Weight { private get; private set; }//TODO: http://weka.wikispaces.com/ARFF+(stable+version)#Instance weights in ARFF files
         
-        public void addValue(IArffValue value)
+        public IArffValue[] GetValues()
         {
-            this.Values[value.AttributeNo] = value;
+            return Values;
         }
 
-        public IArffValue[] getValues()
+
+        public new void AddValue(string value)
         {
-            return this.Values;
+            var pair = value.Split(new []{' '}, 2);
+            Iterator=Convert.ToInt32(pair[0]);
+            base.AddValue(pair[1]);
         }
     }
 }

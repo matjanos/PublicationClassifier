@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace ArffSharp
+﻿namespace ArffSharp.ArffAttributes
 {
     class ArffAttributeNumeric : ArffAttribute
     {
@@ -16,7 +11,7 @@ namespace ArffSharp
         public ArffAttributeNumeric(int index, string name)
             : base(index, name)
         {
-            this.TypeKeyWord = "numeric";
+            TypeKeyWord = "numeric";
         }
     }
 }
