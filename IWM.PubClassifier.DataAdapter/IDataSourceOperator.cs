@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace IWM.PubClassifier.DataAdapter
 {
-    class Program
+    interface IDataSourceOperator
     {
-        static void Main(string[] args)
-        {
-            ArffConnection ac = new ArffConnection("D:/a.arff");
-        }
+        int ExecuteSqlStatement(string sqlStatement);
     }
 }

@@ -1,72 +1,76 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data;
+using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
 using ArffSharp;
 
 namespace IWM.PubClassifier.DataAdapter
 {
-    class ArffConnection : IDisposable
+    internal class ArffConnection : IDisposable
     {
         //Rozszerzenie plików Arff
-        private const string extension = ".arff";
+        private const string Extension = ".arff";
+        public List<Dictionary<string, float>> ObjectsAttributes;
+
 
         //Ścieżka do pliku Arff
-        private string path = null;
+        private string _path;
         //czytnik plików Arff
-        private ArffReader reader = null;
+        private ArffReader _reader;
 
         /// <summary>
-        /// Tworzy obiekt typu ArffConnection, który realizuje dostęp do pliku Arff i pobiera z niego dane
+        ///     Tworzy obiekt typu ArffConnection, który realizuje dostęp do pliku Arff i pobiera z niego dane
         /// </summary>
-        /// <param name="path">Ścieżka do pliku .arff</param>
+        /// <param name="pathString">Ścieżka do pliku .arff</param>
         public ArffConnection(string pathString)
         {
             if (pathString == null) throw new ArgumentNullException();
             string pathTemp = Path.GetFullPath(pathString);
-            if (Path.GetExtension(pathTemp) != extension) throw new InvalidDataException("The file has to have " + extension + " extension");
+            if (Path.GetExtension(pathTemp) != Extension)
+                throw new InvalidDataException("The file has to have " + Extension + " extension");
             if (!File.Exists(pathTemp)) throw new FileNotFoundException(pathTemp + " not found.");
 
-            this.path = pathTemp;
+            _path = pathTemp;
 
-            reader = new ArffReader(@path);
+            _reader = new ArffReader(_path);
+            InsertDataIntoHashTables();
         }
-
-        /// <summary>
-        /// Gets data table values from the arff source file.
-        /// </summary>
-        //TODO: replace void into DataTable
-        public /*DataTable*/ void getDataTable()
-        {
-            IArffRecord record;
-            while ((record = reader.ReadNextRecord()) != null)
-            {
-                IArffValue[] values = (IArffValue[])record.getValues();
-                for (int valueIndex = 0; valueIndex < values.Length; valueIndex++)
-                {
-                    IArffValue val = values[valueIndex];
-                    var attr = reader.Attributes[valueIndex];
-                    if (val is ArffSharp.ArffValueNominal) ;
-                    // Console.WriteLine("{0}: {1}", attr.Name, val.AttributeNo >= 0 ? attr.NominalValues[val.AttributeNo] : "?");
-                    else
-                    {
-                        if (val != null)
-                            Console.WriteLine("{0}: {1}", attr.Name, val == null ? "?" : val.ValueObj);
-                    }
-                }
-                Console.WriteLine();
-            }
-        }
-
 
         public void Dispose()
         {
-            this.path = null;
-            this.reader.Dispose();
-            this.reader = null;
+            _path = null;
+            _reader.Dispose();
+            _reader = null;
+        }
+
+        /// <summary>
+        ///     Inserts data into Dictionaries from the arff source file.
+        /// </summary>
+        private void InsertDataIntoHashTables()
+        {
+            var clock = new Stopwatch();
+            clock.Start();
+            IArffRecord record;
+            ObjectsAttributes = new List<Dictionary<string, float>>();
+            while ((record = _reader.ReadNextRecord()) != null)
+            {
+                var recordDictionary = new Dictionary<string, float>();
+                var values = record.getValues();
+                foreach (var arffValue in values)
+                {
+                    if (arffValue == null) continue;
+
+                    var attr = _reader.Attributes[arffValue.AttributeNo];
+                    if (arffValue is ArffValueNumeric)
+                    {
+                        recordDictionary.Add(attr.Name, (float)arffValue.ValueObj);
+                    }
+                }
+                ObjectsAttributes.Add(recordDictionary);
+            }
+            clock.Stop();
+            Console.WriteLine("Czas wczytywania: {0}", clock.Elapsed);
+            //Console.ReadKey();
         }
     }
 }

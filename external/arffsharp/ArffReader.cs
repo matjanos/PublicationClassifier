@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.IO;
-    using ArffSharp.Extensions;
+    using Extensions;
     using LumenWorks.Framework.IO.Csv;
 
     /// <summary>
@@ -70,7 +70,7 @@
             {
                 record = new ArffRecord(this.attributeCount);
             }
-            for (int i = 0; i < this.attributeCount; i++)
+            for (int i = 0; i < csvReader.FieldCount; i++)
             {
                 string attrValueStr = csvReader[i];
                 if (record is ArffRecordSparse)
@@ -81,6 +81,12 @@
                 {
                     case "numeric":
                         arffVal = new ArffValueNumeric(attrValueStr);
+                        break;
+                    case "date":
+                        arffVal = new ArffValueDate(attrValueStr);
+                        break;
+                    case "string":
+                        arffVal = new ArffValueString(attrValueStr);
                         break;
                     case "":
                         var val = attrValueStr.Unescape();
@@ -102,7 +108,7 @@
                         throw new Exception("Unknown ARFF attribute type");
                 }
                 record.addValue(arffVal);
-                if (record is ArffRecordSparse && csvReader[i].EndsWith("}"))
+                if (record is ArffRecordSparse && csvReader[i][csvReader[i].Length-1]=='}')
                 {//koniec atrybutów wariantu
                     //TODO: czy jest waga
                     break;

@@ -1,34 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 
 namespace ArffSharp
 {
-    public class ArffValueNumeric : IArffValue
+    public class ArffValueDate : IArffValue
     {
         public int AttributeNo
         {
             get;
             private set;
         }
-        public float Value
+        public DateTime Value
         {
             get;
             private set;
         }
 
 
-        public ArffValueNumeric(string sparseValue)
+        public ArffValueDate(string sparseValue)
         {
             var attributeWithNo = sparseValue.Split(' ');
             if (attributeWithNo.Length != 2) throw new ArgumentException("This string argument does not represent Sparse attribute value");
-            this.AttributeNo = Convert.ToInt32(attributeWithNo[0]);
-            this.Value = float.Parse(attributeWithNo[1], CultureInfo.InvariantCulture);
+            AttributeNo = Convert.ToInt32(attributeWithNo[0]);
+           // this.Value = DateTime.Parse(attributeWithNo[1], CultureInfo.InvariantCulture);//TODO: parse date
         }
 
-        public ArffValueNumeric(float value, int attributeNo)
+        public ArffValueDate(DateTime value, int attributeNo)
         {
             this.Value = value;
             this.AttributeNo = attributeNo;

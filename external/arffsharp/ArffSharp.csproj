@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArffValueString.cs" />
     <Compile Include="ArffAtributes\ArffAttribute.cs" />
     <Compile Include="ArffAtributes\ArffAttributeNominal.cs" />
     <Compile Include="ArffAtributes\ArffAttributeNumeric.cs" />
@@ -49,6 +50,7 @@
     <Compile Include="ArffReaderException.cs" />
     <Compile Include="ArffRecord.cs" />
     <Compile Include="ArffRecordSparse.cs" />
+    <Compile Include="ArffValueDate.cs" />
     <Compile Include="ArffValueNumeric.cs" />
     <Compile Include="IArffRecord.cs" />
     <Compile Include="IArffValue.cs" />

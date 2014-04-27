@@ -6,11 +6,15 @@ using System.Threading.Tasks;
 
 namespace IWM.PubClassifier.DataAdapter
 {
-    class Program
+    class DataRecord
     {
-        static void Main(string[] args)
+        private long recordId;
+        private object[] recordAttributes;
+        
+
+        public DataRecord(long id, object[] attributes)
         {
-            ArffConnection ac = new ArffConnection("D:/a.arff");
+            
         }
     }
 }

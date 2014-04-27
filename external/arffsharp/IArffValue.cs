@@ -5,6 +5,7 @@
     /// </summary>
     public interface IArffValue
     {
+
         int AttributeNo
         {
             get;
