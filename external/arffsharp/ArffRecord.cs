@@ -28,6 +28,7 @@ namespace ArffSharp
         public virtual void AddValue(string value)
         {
             IArffValue arffVal;
+            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
              switch (_attributesCollection[Iterator].TypeKeyWord)
                 {
                     case "numeric":

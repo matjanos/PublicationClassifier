@@ -68,16 +68,19 @@ namespace IWM.PubClassifier.DataAdapter
                     }
                     else if (arffValue is ArffValueDate)
                     {
-                        Console.WriteLine(((ArffValueDate)arffValue).GetDateValue());
+                       // Console.WriteLine(((ArffValueDate)arffValue).GetDateValue());
                     }
                     else if (arffValue is ArffValueString)
                     {
-                        Console.WriteLine(((ArffValueString)arffValue).GetStringValue());
+                        //Console.WriteLine(((ArffValueString)arffValue).GetStringValue());
 
                     }
                     else if (arffValue is ArffValueNominal)
                     {
-                        Console.WriteLine(String.Format("{0} : {1}",_reader.Attributes[arffValue.AttributeNo].Name,((ArffAttributeNominal)_reader.Attributes[arffValue.AttributeNo]).NominalValues[((ArffValueNominal)arffValue).GetNominalValue()]));
+                        double value = Convert.ToDouble(((ArffAttributeNominal)_reader.Attributes[arffValue.AttributeNo]).NominalValues[((ArffValueNominal)arffValue).GetNominalValue()]);
+                        recordDictionary.Add(attr.Name, (float)value);
+
+                       // Console.WriteLine(String.Format("{0} : {1}",_reader.Attributes[arffValue.AttributeNo].Name,((ArffAttributeNominal)_reader.Attributes[arffValue.AttributeNo]).NominalValues[((ArffValueNominal)arffValue).GetNominalValue()]));
                     }
                 }
                 ObjectsAttributes.Add(recordDictionary);
