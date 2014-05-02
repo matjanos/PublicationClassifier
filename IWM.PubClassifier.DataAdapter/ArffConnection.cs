@@ -48,7 +48,7 @@ namespace IWM.PubClassifier.DataAdapter
         ///     Inserts data into Dictionaries from the arff source file.
         /// </summary>
         private void InsertDataIntoHashTables()
-        {
+        {   
             var clock = new Stopwatch();
             clock.Start();
             IArffRecord record;
